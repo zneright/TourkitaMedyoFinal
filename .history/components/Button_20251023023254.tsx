@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: 10,
         left: 20,
-
+    
         padding: 10,
         borderRadius: 20,
         alignItems: 'center',
@@ -24,4 +24,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default Button;
+export default Button

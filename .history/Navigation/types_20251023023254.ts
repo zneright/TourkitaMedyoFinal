@@ -38,5 +38,4 @@ export type RootStackParamList = {
     FAQScreen: undefined;
     View3D: undefined;
     RelicList: undefined;
-    AssetList: { assets: any[]; title: string; mode: '3D' | 'AR' };
 };

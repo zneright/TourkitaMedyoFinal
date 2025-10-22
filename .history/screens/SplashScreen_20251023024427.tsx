@@ -102,6 +102,7 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ navigation }) => {
         </View>
     );
 };
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
