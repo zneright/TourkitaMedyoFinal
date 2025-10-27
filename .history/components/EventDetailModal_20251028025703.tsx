@@ -73,8 +73,10 @@ const EventDetailModal: React.FC<Props> = ({ visible, onClose, event }) => {
         return null;
     }
 
+    // --- ADDED: Check if the event has a navigatable location ---
     const hasLocation = !!(event.lat && event.lng || event.locationId);
 
+    // --- All other formatting functions (format, isToday, etc.) are unchanged ---
     const start = parseISO(event.startDate);
     const end = event.endDate ? parseISO(event.endDate) : start;
     let displayDate = "";
@@ -110,6 +112,7 @@ const EventDetailModal: React.FC<Props> = ({ visible, onClose, event }) => {
     const publicStatus = event.openToPublic ? "Open to Public" : "Private Event";
     const publicStatusColor = event.openToPublic ? "#27ae60" : "#c0392b";
 
+    // --- EDITED: handleNavigate function updated ---
     const handleNavigate = async () => {
         try {
             setLoading(true);
@@ -121,7 +124,7 @@ const EventDetailModal: React.FC<Props> = ({ visible, onClose, event }) => {
                     latitude: event.lat,
                     longitude: event.lng,
                 };
-                loadDirection(target);
+                loadDirection(target); // Assuming this sets the route
                 navigation.navigate("Maps", target);
 
             } else if (event.locationId) {
@@ -129,7 +132,7 @@ const EventDetailModal: React.FC<Props> = ({ visible, onClose, event }) => {
                 const snap = await getDoc(docRef);
                 if (snap.exists()) {
                     const marker = snap.data();
-                    setSelectedLandmark(marker);
+                    setSelectedLandmark(marker); // Set context for the map
                     navigation.navigate("Maps", {
                         latitude: marker.latitude,
                         longitude: marker.longitude,
@@ -137,12 +140,13 @@ const EventDetailModal: React.FC<Props> = ({ visible, onClose, event }) => {
                         category: "Events",
                     });
                 } else {
-                    setSelectedLandmark(null);
+                    // Fallback if marker ID is invalid
+                    setSelectedLandmark(null); // Clear previous landmark
                     navigation.navigate("Maps", { category: "Events" });
                 }
             } else {
-
-                setSelectedLandmark(null);
+                // This case handles events with no locationId or lat/lng
+                setSelectedLandmark(null); // **THIS IS THE FIX**: Clear the previous landmark
                 navigation.navigate("Maps", { category: "Events" });
             }
 
@@ -169,6 +173,7 @@ const EventDetailModal: React.FC<Props> = ({ visible, onClose, event }) => {
                         )}
                         <Text style={styles.title}>{event.title}</Text>
 
+                        {/* Info Cards */}
                         <View style={[styles.cardBase, styles.infoCard]}>
                             <Ionicons name="calendar-outline" size={20} color="#555" />
                             <Text style={styles.infoText}>{displayDate}</Text>

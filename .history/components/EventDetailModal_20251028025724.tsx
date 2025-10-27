@@ -73,6 +73,7 @@ const EventDetailModal: React.FC<Props> = ({ visible, onClose, event }) => {
         return null;
     }
 
+    // --- ADDED: Check if the event has a navigatable location ---
     const hasLocation = !!(event.lat && event.lng || event.locationId);
 
     const start = parseISO(event.startDate);
