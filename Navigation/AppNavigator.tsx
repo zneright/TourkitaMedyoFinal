@@ -28,11 +28,13 @@ import View3D from '../screens/View3D';
 import RelicList from '../screens/RelicList';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
-const AppNavigator = () => {
+const AppNavigator = ({ user }: { user: any }) => {
     return (
         <GestureHandlerRootView>
             <LandmarkProvider>
-                <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Splash">
+                <Stack.Navigator
+                    screenOptions={{ headerShown: false }}
+                    initialRouteName={user ? "Maps" : "Splash"}>
                     <Stack.Screen name="Map" component={MapsScreen} />
                     <Stack.Screen name="AssetList" component={AssetListScreen} />
                     <Stack.Screen name="Splash" component={SplashScreen} />
