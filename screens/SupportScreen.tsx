@@ -8,6 +8,7 @@ import {
     TouchableOpacity,
     StyleSheet,
     Alert,
+    
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import TopHeader from "../components/TopHeader";
@@ -23,10 +24,19 @@ type NavigationProp = NativeStackNavigationProp<RootStackParamList, "Maps">;
 const SupportScreen = () => {
     const { isGuest } = useUser();
     const navigation = useNavigation<NavigationProp>();
+    const handlePress = (action) => {
+        if (action === "Message Us") {
+            const email = "business@intramuros.gov.ph";
+            const subject = encodeURIComponent("TourKita Support Inquiry");
+            const body = encodeURIComponent("Hello TourKita Team,\n\nI need help with...");
+            const mailUrl = `mailto:${email}?subject=${subject}&body=${body}`;
 
-    const handlePress = (label: string) => {
-        Alert.alert(`${label} pressed`);
+            Linking.openURL(mailUrl).catch((err) =>
+                console.error("Failed to open email app:", err)
+            );
+        }
     };
+  
 
     const SupportRow = ({
         label,
@@ -73,7 +83,7 @@ const SupportScreen = () => {
                         label="Call Us"
                         subtitle="Talk to our Executive"
                         icon="phone"
-                        onPress={() => handlePress("Call Us")}
+                        onPress={() => Linking.openURL('tel:+639123456789')}
                     />
                     <SupportBox
                         label="Message Us"
