@@ -758,7 +758,7 @@ export default function SelectedLandmarkSheet() {
 
     buttonText: {
         color: "#fff",
-
+   
         fontSize: 16,
         letterSpacing: 0.5,
     },

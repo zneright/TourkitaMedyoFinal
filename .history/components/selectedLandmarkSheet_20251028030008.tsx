@@ -11,6 +11,7 @@ import {
     Alert,
 } from "react-native";
 import Video from 'react-native-video';
+import * as Speech from 'expo-speech';
 import { useLandmark } from "../provider/LandmarkProvider";
 import Entypo from "@expo/vector-icons/Entypo";
 import Fontisto from "@expo/vector-icons/Fontisto";
@@ -43,6 +44,7 @@ export default function SelectedLandmarkSheet() {
     const [loadingSheet, setLoadingSheet] = useState(true);
     const navigation = useNavigation<NavigationProp>();
 
+    const [isSpeaking, setIsSpeaking] = useState(false);
     const handleNavigateToAssetList = async (mode) => {
         if (!selectedLandmark) return;
         bottomSheetRef.current?.close();

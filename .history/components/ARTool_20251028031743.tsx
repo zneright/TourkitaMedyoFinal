@@ -12,7 +12,7 @@ import {
   ViroVideo,
   ViroARImageMarker,
 } from "@reactvision/react-viro";
-import { useRoute } from "@react-navigation/native";  
+import { useRoute } from "@react-navigation/native";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import Button from "./Button";

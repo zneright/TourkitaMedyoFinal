@@ -11,6 +11,7 @@ import {
     Alert,
 } from "react-native";
 import Video from 'react-native-video';
+import * as Speech from 'expo-speech';
 import { useLandmark } from "../provider/LandmarkProvider";
 import Entypo from "@expo/vector-icons/Entypo";
 import Fontisto from "@expo/vector-icons/Fontisto";
@@ -43,12 +44,34 @@ export default function SelectedLandmarkSheet() {
     const [loadingSheet, setLoadingSheet] = useState(true);
     const navigation = useNavigation<NavigationProp>();
 
+    const [isSpeaking, setIsSpeaking] = useState(false);
+    useEffect(() => {
+        return () => {
+            Speech.stop();
+            setIsSpeaking(false);
+        };
+    }, [selectedLandmark]);
+
+    const handleSpeech = () => {
+        const textToSpeak = selectedLandmark?.description || "No description provided.";
+        if (isSpeaking) {
+            Speech.stop();
+            setIsSpeaking(false);
+        } else {
+            setIsSpeaking(true);
+            Speech.speak(textToSpeak, {
+                onDone: () => setIsSpeaking(false),
+                onError: () => setIsSpeaking(false),
+                onStopped: () => setIsSpeaking(false),
+            });
+        }
+    };
     const handleNavigateToAssetList = async (mode) => {
         if (!selectedLandmark) return;
         bottomSheetRef.current?.close();
 
         try {
-            // Find ALL viewable assets for this landmark (both the main building and relics)
+
             const q = query(
                 collection(db, "arTargets"),
                 where("locationName", "==", selectedLandmark.name)
@@ -64,11 +87,10 @@ export default function SelectedLandmarkSheet() {
                 return;
             }
 
-            // Navigate to the new list screen, passing the assets and the desired mode
             navigation.navigate("AssetList", {
                 assets,
                 title: selectedLandmark.name,
-                mode: mode, // '3D' or 'AR'
+                mode: mode,
             });
 
         } catch (e) {
@@ -525,7 +547,16 @@ export default function SelectedLandmarkSheet() {
 
                         {/* Description */}
                         <View style={styles.section}>
-                            <Text style={styles.sectionTitle}>Historical Background</Text>
+                            <View style={styles.sectionTitleContainer}> {/* New container for title and icon */}
+                                <Text style={styles.sectionTitle}>Historical Background</Text>
+                                <TouchableOpacity onPress={handleSpeech}>
+                                    <Ionicons
+                                        name={isSpeaking ? "volume-off" : "volume-high-outline"}
+                                        size={26}
+                                        color="#4E342E"
+                                    />
+                                </TouchableOpacity>
+                            </View>
                             <Text style={styles.description}>
                                 {selectedLandmark.description
                                     ? selectedLandmark.description.split("\n").map((paragraph: string, pIndex: number) => (
@@ -548,8 +579,6 @@ export default function SelectedLandmarkSheet() {
                                     ))
                                     : "No description provided."}
                             </Text>
-
-
                         </View>
 
                         {/* Rating */}
@@ -798,4 +827,17 @@ export default function SelectedLandmarkSheet() {
         width: '100%',
         height: 300,
     }
+    sectionTitleContainer: { // <-- Add this style
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 10,
+    },
+    sectionTitle: {
+        fontWeight: "700",
+        fontSize: 18,
+        color: "#3E2723",
+        letterSpacing: 0.4,
+        flex: 1, // Allow title to take available space
+    },
 });

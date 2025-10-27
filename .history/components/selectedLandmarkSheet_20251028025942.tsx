@@ -11,7 +11,8 @@ import {
     Alert,
 } from "react-native";
 import Video from 'react-native-video';
-import { useLandmark } from "../provider/LandmarkProvider";
+i
+mport { useLandmark } from "../provider/LandmarkProvider";
 import Entypo from "@expo/vector-icons/Entypo";
 import Fontisto from "@expo/vector-icons/Fontisto";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
@@ -758,7 +759,7 @@ export default function SelectedLandmarkSheet() {
 
     buttonText: {
         color: "#fff",
-
+   
         fontSize: 16,
         letterSpacing: 0.5,
     },

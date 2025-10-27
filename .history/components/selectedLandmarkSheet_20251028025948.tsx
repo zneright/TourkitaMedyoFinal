@@ -11,6 +11,8 @@ import {
     Alert,
 } from "react-native";
 import Video from 'react-native-video';
+import * as Speech from 'expo-speech';
+import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { useLandmark } from "../provider/LandmarkProvider";
 import Entypo from "@expo/vector-icons/Entypo";
 import Fontisto from "@expo/vector-icons/Fontisto";
