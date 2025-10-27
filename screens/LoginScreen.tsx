@@ -96,14 +96,14 @@ const LoginScreen = () => {
                 return;
             }
 
-            // ✅ Set registered user activeStatus to true
+            // Set registered user activeStatus to true
             await setDoc(
                 doc(db, 'users', user.uid),
                 { activeStatus: true },
                 { merge: true }
             );
 
-            // ✅ If current user was a guest, mark guest inactive
+            // If current user was a guest, mark guest inactive
             if (isGuest && currentUser?.uid) {
                 await updateGuestStatus(currentUser.uid, false);
             }
@@ -124,7 +124,7 @@ const LoginScreen = () => {
             setLoadingLogin(false);
         }
     };
-
+    
     const handleGuestLogin = async () => {
         if (isLoading) return;
         setLoadingGuest(true);
@@ -133,7 +133,7 @@ const LoginScreen = () => {
             setUser(user);
             setIsGuest(true);
 
-            // ✅ Mark guest active
+            // Mark guest active
             await updateGuestStatus(user.uid, true);
 
             navigation.replace('Maps');
