@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { StyleSheet, View, ActivityIndicator, Text, TouchableOpacity } from "react-native";
 import * as FileSystem from 'expo-file-system';
 import {
@@ -6,6 +6,8 @@ import {
   ViroARSceneNavigator,
   ViroAmbientLight,
   Viro3DObject,
+  ViroNode,
+  ViroText,
   ViroARTrackingTargets,
   ViroVideo,
   ViroARImageMarker,
@@ -14,7 +16,7 @@ import { useRoute } from "@react-navigation/native";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import Button from "./Button";
-import { SHARED_ASSETS_DIR, getFilenameFromUrl, getSafeDirName } from '../utils/fileSystem';
+import { SHARED_ASSETS_DIR, getFilenameFromUrl, getSafeDirName } from '../utils/fileSystems';
 
 function ARScene({ localModelUri, localImageUri, localVideoUri, targetName, physicalWidth }) {
   useEffect(() => {
@@ -29,13 +31,53 @@ function ARScene({ localModelUri, localImageUri, localVideoUri, targetName, phys
     });
   }, [localImageUri, targetName, physicalWidth]);
 
+  // Pinch-to-zoom state for the model
+  const MIN_SCALE = 0.02;
+  const MAX_SCALE = 2.0;
+  const INITIAL_SCALE = 0.1;
+  const [modelScale, setModelScale] = useState<[number, number, number]>([INITIAL_SCALE, INITIAL_SCALE, INITIAL_SCALE]);
+  const baseScale = useRef<number>(INITIAL_SCALE);
+  // Store the scale at the start of a pinch gesture so scaleFactor is applied relative to the gesture start
+  const pinchStartScale = useRef<number>(INITIAL_SCALE);
+  const [lastPinch, setLastPinch] = useState<string | null>(null);
+
+  const handlePinch = (pinchState: number, scaleFactor: number) => {
+    // pinchState: 1=start, 2=move, 3=end (common values). Different versions may vary slightly.
+    // We store the scale at gesture start so the scaleFactor is applied relative to start — this prevents
+    // multiplying against a stale baseScale and avoids the perceived delay/jumpiness.
+    // Debug: log pinch events so we can verify the event values at runtime
+    try { console.log('[AR] handlePinch', { pinchState, scaleFactor, baseScale: baseScale.current, pinchStart: pinchStartScale.current }); } catch (e) { }
+    // update on-screen debug text
+    try { setLastPinch(`state:${pinchState} factor:${scaleFactor.toFixed(3)}`); } catch (e) { }
+    
+    if (pinchState === 1) {
+      // gesture started
+      pinchStartScale.current = baseScale.current;
+    }
+
+    const next = Math.max(MIN_SCALE, Math.min(MAX_SCALE, pinchStartScale.current * scaleFactor));
+    setModelScale([next, next, next]);
+
+    // When gesture ends, commit the base scale
+    if (pinchState === 3) {
+      baseScale.current = next;
+    }
+  };
+
   return (
     <ViroARScene>
       <ViroAmbientLight color="#FFFFFF" />
       {localImageUri && localModelUri && (
         <ViroARImageMarker target={targetName}>
-          <Viro3DObject source={{ uri: localModelUri }} type="GLB" position={[0, 0, 0]} scale={[0.1, 0.1, 0.1]} />
+          <ViroNode position={[0, 0, 0]} scale={modelScale} onPinch={handlePinch}>
+            <Viro3DObject
+              source={{ uri: localModelUri }}
+              type="GLB"
+              position={[0, 0, 0]}
+            />
+          </ViroNode>
           {localVideoUri && <ViroVideo source={{ uri: localVideoUri }} loop position={[0, 0.5, 0]} scale={[0.5, 0.28, 1]} />}
+          {lastPinch && <ViroText text={lastPinch} position={[0, 0.6, 0]} style={{ fontSize: 20, color: '#FFFFFF', textAlign: 'center' }} />}
         </ViroARImageMarker>
       )}
     </ViroARScene>
@@ -44,14 +86,14 @@ function ARScene({ localModelUri, localImageUri, localVideoUri, targetName, phys
 
 export function CameraPan() {
   const route = useRoute();
-  const { arTargetId } = route.params || {};
+  const { arTargetId } = (route.params || {}) as any;
 
-  const [arData, setArData] = useState(null);
+  const [arData, setArData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isDownloaded, setIsDownloaded] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const [downloadProgress, setDownloadProgress] = useState(0);
-  const [localUris, setLocalUris] = useState({});
+  const [localUris, setLocalUris] = useState<any>({});
 
   useEffect(() => {
     const fetchArTarget = async () => {
@@ -135,7 +177,7 @@ export function CameraPan() {
   if (isDownloaded) {
     return (
       <View style={styles.container}>
-        <ViroARSceneNavigator autofocus initialScene={{ scene: () => <ARScene localModelUri={localUris.model} localImageUri={localUris.image} localVideoUri={localUris.video} targetName={arData.name} physicalWidth={arData.physicalWidth} /> }} worldAlignment="Gravity" />
+        <ViroARSceneNavigator autofocus viroAppProps={{ enableGestures: true }} initialScene={{ scene: () => <ARScene localModelUri={localUris.model} localImageUri={localUris.image} localVideoUri={localUris.video} targetName={arData.name} physicalWidth={arData.physicalWidth} /> }} worldAlignment="Gravity" />
         <Button />
       </View>
     );

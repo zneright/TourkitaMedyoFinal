@@ -11,7 +11,7 @@ import {
 } from 'react-native-filament';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { useSharedValue } from 'react-native-worklets-core';
-import { SHARED_ASSETS_DIR, getFilenameFromUrl, getSafeDirName } from '../utils/fileSystem';
+import { SHARED_ASSETS_DIR, getFilenameFromUrl, getSafeDirName } from '../utils/fileSystems';
 import Button from '../components/Button';
 
 export default function View3D({ route, navigation }) {

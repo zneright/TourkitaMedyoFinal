@@ -589,7 +589,7 @@ export default function SelectedLandmarkSheet() {
                                 {/* View in AR Button */}
                                 <View style={styles.buttonWrapper}>
                                     <LottieView
-                                        source={require('../assets/animations/mapSearch.json')}
+                                        source={require('../assets/animations/viewInRW.json')}
                                         style={styles.lottie}
                                         loop
                                         autoPlay
@@ -598,7 +598,7 @@ export default function SelectedLandmarkSheet() {
                                         style={styles.button}
                                         onPress={() => handleNavigateToAssetList('AR')}
                                     >
-                                        <Text style={styles.buttonText}>View in AR</Text>
+                                        <Text style={styles.buttonText}>View in Real World</Text>
                                     </TouchableOpacity>
                                 </View>
                             </View>
@@ -758,7 +758,7 @@ export default function SelectedLandmarkSheet() {
 
     buttonText: {
         color: "#fff",
-        fontWeight: "bold",
+   
         fontSize: 16,
         letterSpacing: 0.5,
     },

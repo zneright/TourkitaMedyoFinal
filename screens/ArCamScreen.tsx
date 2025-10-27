@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, StyleSheet } from 'react-native'
 
-import { CameraPan } from '../components/ARTool'
+import ARTestScreen from '../components/ArTestScreen'
 import { useUser } from '../context/UserContext'
 import GuestLockOverlay from '../components/guestLockOverlay'
 function ArCamScreen() {
@@ -9,7 +9,7 @@ function ArCamScreen() {
     return (
         <View style={styles.container}>
            
-            {!isGuest && <CameraPan />}
+            {!isGuest && <ARTestScreen />}
             {isGuest && <GuestLockOverlay />}
    
         </View>

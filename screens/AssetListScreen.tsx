@@ -3,7 +3,7 @@ import { View, Text, SectionList, TouchableOpacity, Image, StyleSheet, ActivityI
 import * as FileSystem from 'expo-file-system';
 import { Ionicons } from "@expo/vector-icons";
 import Button from "../components/Button";
-import { SHARED_ASSETS_DIR, getFilenameFromUrl, getSafeDirName } from '../utils/fileSystem';
+import { SHARED_ASSETS_DIR, getFilenameFromUrl, getSafeDirName } from '../utils/fileSystems';
 
 const AssetItem = ({ item, navigation, mode }) => {
     const [status, setStatus] = useState('checking');

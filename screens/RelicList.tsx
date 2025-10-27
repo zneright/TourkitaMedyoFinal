@@ -4,7 +4,7 @@ import { View, Text, FlatList, TouchableOpacity, Image, StyleSheet, ActivityIndi
 import * as FileSystem from 'expo-file-system';
 import { Ionicons } from "@expo/vector-icons";
 import Button from "../components/Button";
-import { SHARED_ASSETS_DIR, getFilenameFromUrl, getSafeDirName } from '../utils/fileSystem';
+import { SHARED_ASSETS_DIR, getFilenameFromUrl, getSafeDirName } from '../utils/fileSystems';
 
 // --- A self-contained component for each item in the list ---
 const RelicItem = ({ item, navigation }) => {
