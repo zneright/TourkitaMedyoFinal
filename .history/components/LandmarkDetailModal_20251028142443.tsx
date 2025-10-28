@@ -161,6 +161,9 @@ const LandmarkDetailModal = ({
 };
 
 const styles = StyleSheet.create({
+    // ... (Existing styles remain the same)
+
+    // MODIFIED: Styles for compact audio control
     audioControlWrapper: {
         flexDirection: 'row',
         alignItems: 'center',

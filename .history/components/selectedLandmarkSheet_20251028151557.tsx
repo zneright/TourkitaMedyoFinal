@@ -378,6 +378,7 @@ export default function SelectedLandmarkSheet() {
             )}
             <BottomSheetScrollView contentContainerStyle={styles.scrollContainer}>
                 {loadingSheet ? (
+                    /* ... (Skeleton loading markup remains the same) ... */
                     <View>
                         <SkeletonBox width={200} height={20} />
                         <SkeletonBox width="100%" height={200} style={{ marginTop: 10, borderRadius: 12 }} />
@@ -387,7 +388,9 @@ export default function SelectedLandmarkSheet() {
                     </View>
                 ) : (
                     <>
-                        {/*  Header*/}
+                        {/*  Header, Image, and Opening Hours sections remain the same */}
+                        {/* ... (Markup for topRow, infoRow, and Opening Hours sections) ... */}
+
                         <View style={styles.topRow}>
                             <Text style={styles.arSupportText}>
                                 {selectedLandmark.arCameraSupported ? "AR Camera Supported" : "No AR Support"}
@@ -412,7 +415,7 @@ export default function SelectedLandmarkSheet() {
                             </View>
                         </View>
 
-                        {/*  Image */}
+                        {/*  Image */}
                         <View style={styles.infoRow}>
                             <TouchableOpacity onPress={() => setImageModalVisible(true)}>
                                 <Image
@@ -453,6 +456,7 @@ export default function SelectedLandmarkSheet() {
                         </View>
                         <View style={styles.section}>
                             <Text style={styles.sectionTitle}>Opening Hours & Events</Text>
+                            {/* ... (Opening Hours content remains the same) ... */}
                             {(() => {
                                 const days = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
                                 const formatDay = (d: string) => d.charAt(0).toUpperCase() + d.slice(1, 3); // Mon, Tue...
@@ -544,8 +548,7 @@ export default function SelectedLandmarkSheet() {
                             })()}
                         </View>
 
-
-                        {/* Description */}
+                        {/* Description and Audio (Combined) */}
                         <View style={styles.section}>
                             <Text style={styles.sectionTitle}>Historical Background</Text>
                             <Text style={[styles.description, selectedLandmark.audio && styles.descriptionWithAudio]}>
@@ -599,7 +602,7 @@ export default function SelectedLandmarkSheet() {
                             )}
                         </View>
 
-                        {/* Rating */}
+                        {/* Rating, Modal, and AR buttons remain the same */}
                         {averageRating !== null && (
                             <View style={styles.ratingRow}>
                                 <FontAwesome5 name="star" size={16} color="#E4B343" />

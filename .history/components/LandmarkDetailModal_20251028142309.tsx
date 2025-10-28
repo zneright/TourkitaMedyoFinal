@@ -13,26 +13,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Video from 'react-native-video';
 
-type Marker = {
-    id: string;
-    name: string;
-    image: string;
-    category: string;
-    latitude: number;
-    longitude: number;
-    audio?: string;
-    openingHours?: Record<string, { open: string; close: string; closed: boolean }>;
-    address?: string;
-    description?: string;
-};
-
-type LandmarkDetailModalProps = {
-    visible: boolean;
-    marker: Marker | null;
-    onClose: () => void;
-    onNavigate: (marker: Marker) => void;
-    getOpenStatus: (marker: Marker) => string;
-};
+// ... (Marker Type and Props Definition remains unchanged)
 
 const LandmarkDetailModal = ({
     visible,
@@ -71,6 +52,7 @@ const LandmarkDetailModal = ({
             animationType="fade"
             onRequestClose={handleClose}
         >
+            {/* Hidden Video component for audio playback */}
             {marker.audio && (
                 <Video
                     ref={videoRef}
@@ -137,10 +119,10 @@ const LandmarkDetailModal = ({
                                 </TouchableOpacity>
                                 <Text style={styles.audioLabel}>
                                     {isAudioLoading
-                                        ? 'Loading audio...'
+                                        ? 'Loading Audio...'
                                         : isPlaying
-                                            ? 'Audio playing'
-                                            : 'Play audio'}
+                                            ? 'Tap to pause description'
+                                            : 'Listen to the audio description'}
                                 </Text>
                             </View>
                         )}

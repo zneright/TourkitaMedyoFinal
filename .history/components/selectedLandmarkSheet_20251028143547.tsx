@@ -46,10 +46,6 @@ export default function SelectedLandmarkSheet() {
     const [isPlaying, setIsPlaying] = useState(false);
     const [isAudioLoading, setIsAudioLoading] = useState(false);
     const videoRef = useRef<Video>(null);
-
-    const handleAudioToggle = () => {
-        setIsPlaying(!isPlaying);
-    };
     const handleNavigateToAssetList = async (mode) => {
         if (!selectedLandmark) return;
         bottomSheetRef.current?.close();
@@ -548,7 +544,7 @@ export default function SelectedLandmarkSheet() {
                         {/* Description */}
                         <View style={styles.section}>
                             <Text style={styles.sectionTitle}>Historical Background</Text>
-                            <Text style={[styles.description, selectedLandmark.audio && styles.descriptionWithAudio]}>
+                            <Text style={styles.description}>
                                 {selectedLandmark.description
                                     ? selectedLandmark.description.split("\n").map((paragraph: string, pIndex: number) => (
                                         <Text key={pIndex}>
@@ -571,34 +567,39 @@ export default function SelectedLandmarkSheet() {
                                     : "No description provided."}
                             </Text>
 
-                            {selectedLandmark.audio && (
-                                <View style={styles.audioControlWrapper}>
-                                    <TouchableOpacity
-                                        style={styles.audioPlayButton}
-                                        onPress={handleAudioToggle} // Use the consolidated toggle handler
-                                        disabled={isAudioLoading}
-                                    >
+
+                        </View>
+                        {selectedLandmark.audio && (
+                            <View style={styles.section}>
+                                <Text style={styles.sectionTitle}></Text>
+
+                                <TouchableOpacity
+                                    style={styles.audioMinimalPlayer}
+                                    onPress={() => setIsPlaying(!isPlaying)}
+                                    disabled={isAudioLoading}
+                                >
+                                    <View style={styles.audioMinimalIcon}>
                                         {isAudioLoading ? (
-                                            <ActivityIndicator size="small" color="#FFF" />
+                                            <ActivityIndicator size="small" color="#fff" />
                                         ) : (
                                             <FontAwesome
                                                 name={isPlaying ? 'pause' : 'play'}
-                                                size={20} // Match LandmarkDetailModal size
-                                                color="#FFF"
+                                                size={18}
+                                                color="#fff"
                                             />
                                         )}
-                                    </TouchableOpacity>
-                                    <Text style={styles.audioLabel}>
+                                    </View>
+
+                                    <Text style={styles.audioMinimalText}>
                                         {isAudioLoading
                                             ? 'Loading audio...'
                                             : isPlaying
-                                                ? 'Audio playing'
-                                                : 'Play audio'}
+                                                ? 'Tap to pause'
+                                                : 'Play Audio'}
                                     </Text>
-                                </View>
-                            )}
-                        </View>
-
+                                </TouchableOpacity>
+                            </View>
+                        )}
                         {/* Rating */}
                         {averageRating !== null && (
                             <View style={styles.ratingRow}>
@@ -761,7 +762,13 @@ export default function SelectedLandmarkSheet() {
         color: "#B71C1C",
         fontWeight: "500",
     },
-
+    description: {
+        fontSize: 15,
+        lineHeight: 24,
+        color: "#4E342E",
+        textAlign: "justify",
+        letterSpacing: 0.3,
+    },
 
     ratingRow: {
         flexDirection: "row",
@@ -839,41 +846,29 @@ export default function SelectedLandmarkSheet() {
         width: '100%',
         height: 300,
     },
-    description: {
-        fontSize: 15,
-        lineHeight: 24,
-        color: "#4E342E",
-        textAlign: "justify",
-        letterSpacing: 0.3,
-    },
-
-    descriptionWithAudio: {
-        marginBottom: 10,
-    },
-
-    audioControlWrapper: {
+    audioMinimalPlayer: {
         flexDirection: 'row',
         alignItems: 'center',
-        paddingVertical: 8,
+        backgroundColor: '#EFEBE9',
+        borderRadius: 12,
+        paddingHorizontal: 15,
+        paddingVertical: 12,
+        gap: 15,
+        borderWidth: 1,
+        borderColor: '#D7CCC8',
     },
-    audioPlayButton: {
-        width: 40,
-        height: 40,
-        borderRadius: 20,
-        backgroundColor: "#8A6F57",
+    audioMinimalIcon: {
+        width: 36,
+        height: 36,
+        borderRadius: 18,
+        backgroundColor: '#6D4C41',
         justifyContent: 'center',
         alignItems: 'center',
-        marginRight: 15,
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.15,
-        shadowRadius: 3,
-        elevation: 3,
     },
-    audioLabel: {
-        color: "#6B5E5E",
-        fontSize: 14,
-        fontWeight: '500',
+    audioMinimalText: {
         flex: 1,
+        fontSize: 15,
+        fontWeight: '600',
+        color: '#4E342E',
     },
 });

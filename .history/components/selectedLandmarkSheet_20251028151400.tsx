@@ -761,7 +761,13 @@ export default function SelectedLandmarkSheet() {
         color: "#B71C1C",
         fontWeight: "500",
     },
-
+    description: {
+        fontSize: 15,
+        lineHeight: 24,
+        color: "#4E342E",
+        textAlign: "justify",
+        letterSpacing: 0.3,
+    },
 
     ratingRow: {
         flexDirection: "row",
@@ -839,41 +845,29 @@ export default function SelectedLandmarkSheet() {
         width: '100%',
         height: 300,
     },
-    description: {
-        fontSize: 15,
-        lineHeight: 24,
-        color: "#4E342E",
-        textAlign: "justify",
-        letterSpacing: 0.3,
-    },
-
-    descriptionWithAudio: {
-        marginBottom: 10,
-    },
-
-    audioControlWrapper: {
+    audioMinimalPlayer: {
         flexDirection: 'row',
         alignItems: 'center',
-        paddingVertical: 8,
+        backgroundColor: '#EFEBE9',
+        borderRadius: 12,
+        paddingHorizontal: 15,
+        paddingVertical: 12,
+        gap: 15,
+        borderWidth: 1,
+        borderColor: '#D7CCC8',
     },
-    audioPlayButton: {
-        width: 40,
-        height: 40,
-        borderRadius: 20,
-        backgroundColor: "#8A6F57",
+    audioMinimalIcon: {
+        width: 36,
+        height: 36,
+        borderRadius: 18,
+        backgroundColor: '#6D4C41',
         justifyContent: 'center',
         alignItems: 'center',
-        marginRight: 15,
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.15,
-        shadowRadius: 3,
-        elevation: 3,
     },
-    audioLabel: {
-        color: "#6B5E5E",
-        fontSize: 14,
-        fontWeight: '500',
+    audioMinimalText: {
         flex: 1,
+        fontSize: 15,
+        fontWeight: '600',
+        color: '#4E342E',
     },
 });

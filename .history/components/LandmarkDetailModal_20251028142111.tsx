@@ -71,6 +71,7 @@ const LandmarkDetailModal = ({
             animationType="fade"
             onRequestClose={handleClose}
         >
+            {/* Hidden Video component for audio playback */}
             {marker.audio && (
                 <Video
                     ref={videoRef}
@@ -118,31 +119,32 @@ const LandmarkDetailModal = ({
                             <Text style={styles.modalAddress}>{marker.address}</Text>
                         </View>
 
+                        {/* MODIFIED: Audio Guide Button - Styled for prominence */}
                         {marker.audio && (
-                            <View style={styles.audioControlWrapper}>
-                                <TouchableOpacity
-                                    style={styles.audioPlayButton}
-                                    onPress={handleAudioToggle}
-                                    disabled={isAudioLoading}
-                                >
+                            <TouchableOpacity
+                                style={styles.audioButton}
+                                onPress={handleAudioToggle}
+                                disabled={isAudioLoading}
+                            >
+                                <View style={styles.audioButtonContent}>
                                     {isAudioLoading ? (
-                                        <ActivityIndicator size="small" color="#FFF" />
+                                        <ActivityIndicator size="large" color="#FFF" />
                                     ) : (
                                         <FontAwesome
-                                            name={isPlaying ? 'pause' : 'play'}
-                                            size={20}
+                                            name={isPlaying ? 'pause-circle' : 'play-circle'} // Use larger circle icons
+                                            size={28} // Increased size
                                             color="#FFF"
                                         />
                                     )}
-                                </TouchableOpacity>
-                                <Text style={styles.audioLabel}>
-                                    {isAudioLoading
-                                        ? 'Loading audio...'
-                                        : isPlaying
-                                            ? 'Audio playing'
-                                            : 'Play audio'}
-                                </Text>
-                            </View>
+                                    <Text style={styles.audioButtonText}>
+                                        {isAudioLoading
+                                            ? 'Loading Audio Guide...'
+                                            : isPlaying
+                                                ? 'PAUSE AUDIO GUIDE'
+                                                : 'LISTEN TO AUDIO GUIDE'}
+                                    </Text>
+                                </View>
+                            </TouchableOpacity>
                         )}
 
                         <Text style={styles.modalDescription}>{marker.description}</Text>
@@ -161,30 +163,6 @@ const LandmarkDetailModal = ({
 };
 
 const styles = StyleSheet.create({
-    audioControlWrapper: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingVertical: 8,
-        marginBottom: 15,
-        borderBottomWidth: 1,
-        borderBottomColor: '#E0E0E0',
-    },
-    audioPlayButton: {
-        width: 40,
-        height: 40,
-        borderRadius: 20,
-        backgroundColor: "#8A6F57",
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginRight: 15,
-    },
-    audioLabel: {
-        color: "#6B5E5E",
-        fontSize: 14,
-        fontWeight: '500',
-        flex: 1,
-    },
-
     modalOverlay: {
         flex: 1,
         backgroundColor: "rgba(0,0,0,0.6)",
@@ -254,6 +232,28 @@ const styles = StyleSheet.create({
         lineHeight: 22,
         marginTop: 8,
         marginBottom: 20,
+    },
+    // MODIFIED: Audio Button Styles
+    audioButton: {
+        // Removed explicit width/height constraints, letting padding control size
+        backgroundColor: "#8A6F57",
+        paddingVertical: 12, // Increased padding
+        paddingHorizontal: 15,
+        borderRadius: 10, // Slightly rounder corners
+        marginBottom: 15,
+        // Aligns button to full-width relative to its container
+        alignSelf: 'stretch',
+    },
+    audioButtonContent: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center', // Center content horizontally
+    },
+    audioButtonText: {
+        color: "#FFF",
+        fontSize: 16,
+        fontWeight: 'bold', // Made text bold
+        marginLeft: 12, // Increased space between icon and text
     },
     navigateButton: {
         flexDirection: 'row',

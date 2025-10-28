@@ -13,26 +13,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Video from 'react-native-video';
 
-type Marker = {
-    id: string;
-    name: string;
-    image: string;
-    category: string;
-    latitude: number;
-    longitude: number;
-    audio?: string;
-    openingHours?: Record<string, { open: string; close: string; closed: boolean }>;
-    address?: string;
-    description?: string;
-};
-
-type LandmarkDetailModalProps = {
-    visible: boolean;
-    marker: Marker | null;
-    onClose: () => void;
-    onNavigate: (marker: Marker) => void;
-    getOpenStatus: (marker: Marker) => string;
-};
+// ... (Marker Type and Props Definition remains unchanged)
 
 const LandmarkDetailModal = ({
     visible,
@@ -71,6 +52,7 @@ const LandmarkDetailModal = ({
             animationType="fade"
             onRequestClose={handleClose}
         >
+            {/* Hidden Video component for audio playback */}
             {marker.audio && (
                 <Video
                     ref={videoRef}
@@ -118,6 +100,7 @@ const LandmarkDetailModal = ({
                             <Text style={styles.modalAddress}>{marker.address}</Text>
                         </View>
 
+                        {/* MODIFIED: Compact Audio Guide Control */}
                         {marker.audio && (
                             <View style={styles.audioControlWrapper}>
                                 <TouchableOpacity
@@ -137,10 +120,10 @@ const LandmarkDetailModal = ({
                                 </TouchableOpacity>
                                 <Text style={styles.audioLabel}>
                                     {isAudioLoading
-                                        ? 'Loading audio...'
+                                        ? 'Loading Audio...'
                                         : isPlaying
-                                            ? 'Audio playing'
-                                            : 'Play audio'}
+                                            ? 'Tap to pause description'
+                                            : 'Listen to description'}
                                 </Text>
                             </View>
                         )}
@@ -161,6 +144,9 @@ const LandmarkDetailModal = ({
 };
 
 const styles = StyleSheet.create({
+    // ... (Existing styles remain the same)
+
+    // MODIFIED/ADDED: Styles for compact audio control
     audioControlWrapper: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -182,7 +168,7 @@ const styles = StyleSheet.create({
         color: "#6B5E5E",
         fontSize: 14,
         fontWeight: '500',
-        flex: 1,
+        flex: 1, 
     },
 
     modalOverlay: {

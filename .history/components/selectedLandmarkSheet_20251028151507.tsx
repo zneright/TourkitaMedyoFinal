@@ -855,15 +855,16 @@ export default function SelectedLandmarkSheet() {
         flexDirection: 'row',
         alignItems: 'center',
         paddingVertical: 8,
-    },
+           },
     audioPlayButton: {
         width: 40,
         height: 40,
         borderRadius: 20,
-        backgroundColor: "#8A6F57",
+        backgroundColor: "#8A6F57", // The brown color from the modal
         justifyContent: 'center',
         alignItems: 'center',
         marginRight: 15,
+        // Added shadow for pop effect
         shadowColor: "#000",
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.15,

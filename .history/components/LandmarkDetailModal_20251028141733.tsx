@@ -7,11 +7,11 @@ import {
     StyleSheet,
     TouchableOpacity,
     ScrollView,
-    ActivityIndicator,
+    ActivityIndicator, // Added for loading state
 } from "react-native";
 import Icon from 'react-native-vector-icons/Ionicons';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import Video from 'react-native-video';
+import FontAwesome from 'react-native-vector-icons/FontAwesome'; // Added for play/pause icon
+import Video from 'react-native-video'; // Added for audio playback
 
 type Marker = {
     id: string;
@@ -20,6 +20,7 @@ type Marker = {
     category: string;
     latitude: number;
     longitude: number;
+    // MODIFIED: Added optional audio field
     audio?: string;
     openingHours?: Record<string, { open: string; close: string; closed: boolean }>;
     address?: string;
@@ -41,6 +42,7 @@ const LandmarkDetailModal = ({
     onNavigate,
     getOpenStatus,
 }: LandmarkDetailModalProps) => {
+    // ADDED: State for audio playback
     const [isPlaying, setIsPlaying] = useState(false);
     const [isAudioLoading, setIsAudioLoading] = useState(false);
     const videoRef = useRef<Video>(null);
@@ -69,8 +71,9 @@ const LandmarkDetailModal = ({
             visible={visible}
             transparent
             animationType="fade"
-            onRequestClose={handleClose}
+            onRequestClose={handleClose} // Use custom handler
         >
+            {/* ADDED: Hidden Video component for audio playback */}
             {marker.audio && (
                 <Video
                     ref={videoRef}
@@ -85,7 +88,7 @@ const LandmarkDetailModal = ({
                         setIsPlaying(false);
                         setIsAudioLoading(false);
                     }}
-                    style={{ height: 0, width: 0 }}
+                    style={{ height: 0, width: 0 }} // Keep it hidden
                 />
             )}
 
@@ -118,31 +121,30 @@ const LandmarkDetailModal = ({
                             <Text style={styles.modalAddress}>{marker.address}</Text>
                         </View>
 
+                        {/* ADDED: Audio Guide Button */}
                         {marker.audio && (
-                            <View style={styles.audioControlWrapper}>
-                                <TouchableOpacity
-                                    style={styles.audioPlayButton}
-                                    onPress={handleAudioToggle}
-                                    disabled={isAudioLoading}
-                                >
-                                    {isAudioLoading ? (
-                                        <ActivityIndicator size="small" color="#FFF" />
-                                    ) : (
-                                        <FontAwesome
-                                            name={isPlaying ? 'pause' : 'play'}
-                                            size={20}
-                                            color="#FFF"
-                                        />
-                                    )}
-                                </TouchableOpacity>
-                                <Text style={styles.audioLabel}>
+                            <TouchableOpacity
+                                style={styles.audioButton}
+                                onPress={handleAudioToggle}
+                                disabled={isAudioLoading}
+                            >
+                                {isAudioLoading ? (
+                                    <ActivityIndicator size="small" color="#FFF" />
+                                ) : (
+                                    <FontAwesome
+                                        name={isPlaying ? 'pause' : 'play'}
+                                        size={18}
+                                        color="#FFF"
+                                    />
+                                )}
+                                <Text style={styles.audioButtonText}>
                                     {isAudioLoading
-                                        ? 'Loading audio...'
+                                        ? 'Loading Audio...'
                                         : isPlaying
-                                            ? 'Audio playing'
-                                            : 'Play audio'}
+                                            ? 'Pause Audio Guide'
+                                            : 'Play Audio Guide'}
                                 </Text>
-                            </View>
+                            </TouchableOpacity>
                         )}
 
                         <Text style={styles.modalDescription}>{marker.description}</Text>
@@ -161,30 +163,6 @@ const LandmarkDetailModal = ({
 };
 
 const styles = StyleSheet.create({
-    audioControlWrapper: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingVertical: 8,
-        marginBottom: 15,
-        borderBottomWidth: 1,
-        borderBottomColor: '#E0E0E0',
-    },
-    audioPlayButton: {
-        width: 40,
-        height: 40,
-        borderRadius: 20,
-        backgroundColor: "#8A6F57",
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginRight: 15,
-    },
-    audioLabel: {
-        color: "#6B5E5E",
-        fontSize: 14,
-        fontWeight: '500',
-        flex: 1,
-    },
-
     modalOverlay: {
         flex: 1,
         backgroundColor: "rgba(0,0,0,0.6)",
@@ -254,6 +232,24 @@ const styles = StyleSheet.create({
         lineHeight: 22,
         marginTop: 8,
         marginBottom: 20,
+    },
+    // ADDED: Style for the audio button
+    audioButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: "#8A6F57", // Theme color for the button
+        paddingVertical: 10,
+        paddingHorizontal: 15,
+        borderRadius: 8,
+        marginBottom: 15,
+        justifyContent: 'center',
+        alignSelf: 'flex-start',
+    },
+    audioButtonText: {
+        color: "#FFF",
+        fontSize: 16,
+        fontWeight: '600',
+        marginLeft: 10,
     },
     navigateButton: {
         flexDirection: 'row',

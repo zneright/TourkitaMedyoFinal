@@ -71,6 +71,7 @@ const LandmarkDetailModal = ({
             animationType="fade"
             onRequestClose={handleClose}
         >
+            {/* Hidden Video component for audio playback */}
             {marker.audio && (
                 <Video
                     ref={videoRef}
@@ -118,6 +119,7 @@ const LandmarkDetailModal = ({
                             <Text style={styles.modalAddress}>{marker.address}</Text>
                         </View>
 
+                        {/* MODIFIED: Compact Audio Guide Control */}
                         {marker.audio && (
                             <View style={styles.audioControlWrapper}>
                                 <TouchableOpacity
@@ -139,8 +141,8 @@ const LandmarkDetailModal = ({
                                     {isAudioLoading
                                         ? 'Loading audio...'
                                         : isPlaying
-                                            ? 'Audio playing'
-                                            : 'Play audio'}
+                                            ? 'Audio playing' // Simple status
+                                            : 'Play audio description'} // Neutral prompt
                                 </Text>
                             </View>
                         )}
@@ -161,6 +163,9 @@ const LandmarkDetailModal = ({
 };
 
 const styles = StyleSheet.create({
+    // ... (Existing styles remain the same)
+
+    // MODIFIED: Styles for compact audio control
     audioControlWrapper: {
         flexDirection: 'row',
         alignItems: 'center',

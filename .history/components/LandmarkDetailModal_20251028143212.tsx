@@ -118,33 +118,38 @@ const LandmarkDetailModal = ({
                             <Text style={styles.modalAddress}>{marker.address}</Text>
                         </View>
 
-                        {marker.audio && (
-                            <View style={styles.audioControlWrapper}>
+                        {selectedLandmark.audio && (
+                            <View style={styles.section}>
+                                <Text style={styles.sectionTitle}>Audio Guide</Text>
+
+                                {/* MATCHING DESIGN: Audio Play Button Row */}
                                 <TouchableOpacity
-                                    style={styles.audioPlayButton}
-                                    onPress={handleAudioToggle}
+                                    style={styles.audioMinimalPlayer} // Use the new style
+                                    onPress={() => setIsPlaying(!isPlaying)}
                                     disabled={isAudioLoading}
                                 >
-                                    {isAudioLoading ? (
-                                        <ActivityIndicator size="small" color="#FFF" />
-                                    ) : (
-                                        <FontAwesome
-                                            name={isPlaying ? 'pause' : 'play'}
-                                            size={20}
-                                            color="#FFF"
-                                        />
-                                    )}
+                                    <View style={styles.audioMinimalIcon}>
+                                        {isAudioLoading ? (
+                                            <ActivityIndicator size="small" color="#fff" />
+                                        ) : (
+                                            <FontAwesome
+                                                name={isPlaying ? 'pause' : 'play'}
+                                                size={18}
+                                                color="#fff"
+                                            />
+                                        )}
+                                    </View>
+
+                                    <Text style={styles.audioMinimalText}>
+                                        {isAudioLoading
+                                            ? 'Loading historical audio...'
+                                            : isPlaying
+                                                ? 'Tap to pause audio guide'
+                                                : 'Play Historical Audio Guide'}
+                                    </Text>
                                 </TouchableOpacity>
-                                <Text style={styles.audioLabel}>
-                                    {isAudioLoading
-                                        ? 'Loading audio...'
-                                        : isPlaying
-                                            ? 'Audio playing'
-                                            : 'Play audio'}
-                                </Text>
                             </View>
                         )}
-
                         <Text style={styles.modalDescription}>{marker.description}</Text>
                     </ScrollView>
 

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React from "react";
 import {
     Modal,
     View,
@@ -6,12 +6,11 @@ import {
     Image,
     StyleSheet,
     TouchableOpacity,
+    SafeAreaView,
     ScrollView,
-    ActivityIndicator,
 } from "react-native";
 import Icon from 'react-native-vector-icons/Ionicons';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import Video from 'react-native-video';
+npm install react - native - video
 
 type Marker = {
     id: string;
@@ -20,7 +19,6 @@ type Marker = {
     category: string;
     latitude: number;
     longitude: number;
-    audio?: string;
     openingHours?: Record<string, { open: string; close: string; closed: boolean }>;
     address?: string;
     description?: string;
@@ -41,10 +39,6 @@ const LandmarkDetailModal = ({
     onNavigate,
     getOpenStatus,
 }: LandmarkDetailModalProps) => {
-    const [isPlaying, setIsPlaying] = useState(false);
-    const [isAudioLoading, setIsAudioLoading] = useState(false);
-    const videoRef = useRef<Video>(null);
-
     if (!marker) return null;
 
     const status = getOpenStatus(marker);
@@ -53,49 +47,20 @@ const LandmarkDetailModal = ({
 
     const statusColor = isAvailable ? "#28a745" : isUnavailable ? "#dc3545" : "#6c757d";
 
-    const handleClose = () => {
-        if (isPlaying) {
-            setIsPlaying(false);
-        }
-        onClose();
-    };
-
-    const handleAudioToggle = () => {
-        setIsPlaying(!isPlaying);
-    };
-
     return (
         <Modal
             visible={visible}
             transparent
             animationType="fade"
-            onRequestClose={handleClose}
+            onRequestClose={onClose}
         >
-            {marker.audio && (
-                <Video
-                    ref={videoRef}
-                    source={{ uri: marker.audio }}
-                    paused={!isPlaying}
-                    audioOnly
-                    onLoadStart={() => setIsAudioLoading(true)}
-                    onLoad={() => setIsAudioLoading(false)}
-                    onEnd={() => setIsPlaying(false)}
-                    onError={(error) => {
-                        console.error("Audio playback error:", error);
-                        setIsPlaying(false);
-                        setIsAudioLoading(false);
-                    }}
-                    style={{ height: 0, width: 0 }}
-                />
-            )}
-
             <View style={styles.modalOverlay}>
                 <View style={styles.modalContainer}>
                     <Image
                         source={{ uri: marker.image }}
                         style={styles.modalImage}
                     />
-                    <TouchableOpacity style={styles.closeButton} onPress={handleClose}>
+                    <TouchableOpacity style={styles.closeButton} onPress={onClose}>
                         <Icon name="close-circle" size={30} color="#fff" />
                     </TouchableOpacity>
 
@@ -118,33 +83,6 @@ const LandmarkDetailModal = ({
                             <Text style={styles.modalAddress}>{marker.address}</Text>
                         </View>
 
-                        {marker.audio && (
-                            <View style={styles.audioControlWrapper}>
-                                <TouchableOpacity
-                                    style={styles.audioPlayButton}
-                                    onPress={handleAudioToggle}
-                                    disabled={isAudioLoading}
-                                >
-                                    {isAudioLoading ? (
-                                        <ActivityIndicator size="small" color="#FFF" />
-                                    ) : (
-                                        <FontAwesome
-                                            name={isPlaying ? 'pause' : 'play'}
-                                            size={20}
-                                            color="#FFF"
-                                        />
-                                    )}
-                                </TouchableOpacity>
-                                <Text style={styles.audioLabel}>
-                                    {isAudioLoading
-                                        ? 'Loading audio...'
-                                        : isPlaying
-                                            ? 'Audio playing'
-                                            : 'Play audio'}
-                                </Text>
-                            </View>
-                        )}
-
                         <Text style={styles.modalDescription}>{marker.description}</Text>
                     </ScrollView>
 
@@ -161,30 +99,6 @@ const LandmarkDetailModal = ({
 };
 
 const styles = StyleSheet.create({
-    audioControlWrapper: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingVertical: 8,
-        marginBottom: 15,
-        borderBottomWidth: 1,
-        borderBottomColor: '#E0E0E0',
-    },
-    audioPlayButton: {
-        width: 40,
-        height: 40,
-        borderRadius: 20,
-        backgroundColor: "#8A6F57",
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginRight: 15,
-    },
-    audioLabel: {
-        color: "#6B5E5E",
-        fontSize: 14,
-        fontWeight: '500',
-        flex: 1,
-    },
-
     modalOverlay: {
         flex: 1,
         backgroundColor: "rgba(0,0,0,0.6)",
@@ -214,7 +128,6 @@ const styles = StyleSheet.create({
         right: 15,
         backgroundColor: 'rgba(0,0,0,0.4)',
         borderRadius: 15,
-        zIndex: 1,
     },
     contentContainer: {
         paddingHorizontal: 20,

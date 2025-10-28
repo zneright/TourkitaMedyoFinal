@@ -183,7 +183,6 @@ const SearchScreen = () => {
                         openingHours: d.openingHours || {},
                         address: d.address || "Address not available",
                         description: d.description || "",
-                        audio: d.audio || "",
                     };
                 });
 

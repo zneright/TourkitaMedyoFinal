@@ -851,19 +851,22 @@ export default function SelectedLandmarkSheet() {
         marginBottom: 10,
     },
 
+    // --- NEW STYLES COPIED FROM LandmarkDetailModal ---
     audioControlWrapper: {
         flexDirection: 'row',
         alignItems: 'center',
         paddingVertical: 8,
+        // Removed original modal's border/margin setup, keeping it clean inside the card
     },
     audioPlayButton: {
         width: 40,
         height: 40,
         borderRadius: 20,
-        backgroundColor: "#8A6F57",
+        backgroundColor: "#8A6F57", // The brown color from the modal
         justifyContent: 'center',
         alignItems: 'center',
         marginRight: 15,
+        // Added shadow for pop effect
         shadowColor: "#000",
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.15,

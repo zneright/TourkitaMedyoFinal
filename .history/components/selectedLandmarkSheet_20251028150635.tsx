@@ -29,6 +29,12 @@ import { doc, getDoc } from "firebase/firestore";
 import { useNavigation } from "@react-navigation/native";
 import Video from 'react-native-video';
 import { SHARED_ASSETS_DIR, getFilenameFromUrl, getSafeDirName } from '../utils/fileSystems';
+
+// --- Helper functions (kept as is) ---
+
+// ... (parseTimeToMinutes, checkEvents, fetchAverageRating, handleView3D, handleViewRelics, handleViewAR, handleGetDirection, isOpenToday, convertTo12HourFormat functions are unchanged) ...
+// NOTE: I've included the core logic for context, but you should ensure the actual imports and un-copied helper functions are in your final file.
+
 export default function SelectedLandmarkSheet() {
     const [isImageModalVisible, setImageModalVisible] = useState(false);
     const [averageRating, setAverageRating] = useState<number | null>(null);
@@ -50,6 +56,7 @@ export default function SelectedLandmarkSheet() {
     const handleAudioToggle = () => {
         setIsPlaying(!isPlaying);
     };
+
     const handleNavigateToAssetList = async (mode) => {
         if (!selectedLandmark) return;
         bottomSheetRef.current?.close();
@@ -86,7 +93,7 @@ export default function SelectedLandmarkSheet() {
         loadDirection(undefined, newMode);
     };
     type NavigationProp = NativeStackNavigationProp<RootStackParamList, "View3D">;
-    //  Pag pinindot ang markers
+    // Pag pinindot ang markers
     useEffect(() => {
         if (selectedLandmark) {
             setIsPlaying(false);
@@ -99,6 +106,7 @@ export default function SelectedLandmarkSheet() {
             setIsPlaying(false);
         }
     }, [selectedLandmark]);
+
     const parseTimeToMinutes = (t?: string | null) => {
         if (!t) return null;
         const match = t.trim().match(/^(\d{1,2}):?(\d{2})?\s*(AM|PM)$/i);
@@ -114,7 +122,7 @@ export default function SelectedLandmarkSheet() {
         return hour * 60 + minute;
     };
 
-    //  May event ba?
+    // May event ba?
     const checkEvents = async () => {
         if (!selectedLandmark) return;
 
@@ -292,6 +300,7 @@ export default function SelectedLandmarkSheet() {
 
     const handleGetDirection = () => loadDirection();
 
+
     if (!selectedLandmark) return null;
 
     // Checking of time and date now na!
@@ -299,7 +308,7 @@ export default function SelectedLandmarkSheet() {
     const dayOfWeek = today.toLocaleString("en-US", { weekday: "long" }).toLowerCase();
     const currentTime = today.getHours() * 60 + today.getMinutes();
 
-    //  bukas ba?
+    // bukas ba?
     const isOpenToday = () => {
         const hoursToday = selectedLandmark?.openingHours?.[dayOfWeek];
         const eventsToday = weeklyEvents.filter(ev => ev.day === dayOfWeek);
@@ -387,7 +396,7 @@ export default function SelectedLandmarkSheet() {
                     </View>
                 ) : (
                     <>
-                        {/*  Header*/}
+                        {/*  Header*/}
                         <View style={styles.topRow}>
                             <Text style={styles.arSupportText}>
                                 {selectedLandmark.arCameraSupported ? "AR Camera Supported" : "No AR Support"}
@@ -412,7 +421,7 @@ export default function SelectedLandmarkSheet() {
                             </View>
                         </View>
 
-                        {/*  Image */}
+                        {/*  Image */}
                         <View style={styles.infoRow}>
                             <TouchableOpacity onPress={() => setImageModalVisible(true)}>
                                 <Image
@@ -548,7 +557,7 @@ export default function SelectedLandmarkSheet() {
                         {/* Description */}
                         <View style={styles.section}>
                             <Text style={styles.sectionTitle}>Historical Background</Text>
-                            <Text style={[styles.description, selectedLandmark.audio && styles.descriptionWithAudio]}>
+                            <Text style={styles.description}>
                                 {selectedLandmark.description
                                     ? selectedLandmark.description.split("\n").map((paragraph: string, pIndex: number) => (
                                         <Text key={pIndex}>
@@ -570,33 +579,38 @@ export default function SelectedLandmarkSheet() {
                                     ))
                                     : "No description provided."}
                             </Text>
-
                             {selectedLandmark.audio && (
-                                <View style={styles.audioControlWrapper}>
+                                <View style={[styles.section, styles.audioSection]}> {/* Added audioSection style for better separation */}
+                                    <Text style={styles.audioSectionTitle}>Audio Guide</Text> {/* Renamed sectionTitle for context */}
+
                                     <TouchableOpacity
-                                        style={styles.audioPlayButton}
+                                        style={styles.audioMinimalPlayer}
                                         onPress={handleAudioToggle} // Use the consolidated toggle handler
                                         disabled={isAudioLoading}
                                     >
-                                        {isAudioLoading ? (
-                                            <ActivityIndicator size="small" color="#FFF" />
-                                        ) : (
-                                            <FontAwesome
-                                                name={isPlaying ? 'pause' : 'play'}
-                                                size={20} // Match LandmarkDetailModal size
-                                                color="#FFF"
-                                            />
-                                        )}
+                                        <View style={styles.audioMinimalIcon}>
+                                            {isAudioLoading ? (
+                                                <ActivityIndicator size="small" color="#fff" />
+                                            ) : (
+                                                <FontAwesome
+                                                    name={isPlaying ? 'pause' : 'play'}
+                                                    size={18}
+                                                    color="#fff"
+                                                />
+                                            )}
+                                        </View>
+
+                                        <Text style={styles.audioMinimalText}>
+                                            {isAudioLoading
+                                                ? 'Loading audio...'
+                                                : isPlaying
+                                                    ? 'Audio playing' // Changed text to match modal
+                                                    : 'Play Audio'}
+                                        </Text>
                                     </TouchableOpacity>
-                                    <Text style={styles.audioLabel}>
-                                        {isAudioLoading
-                                            ? 'Loading audio...'
-                                            : isPlaying
-                                                ? 'Audio playing'
-                                                : 'Play audio'}
-                                    </Text>
                                 </View>
                             )}
+
                         </View>
 
                         {/* Rating */}
@@ -744,6 +758,21 @@ export default function SelectedLandmarkSheet() {
         shadowRadius: 4,
         elevation: 2,
     },
+    // New style to match the description box padding but for the audio specifically
+    audioSection: {
+        paddingHorizontal: 18,
+        paddingVertical: 18,
+        // Remove marginBottom or adjust if needed for layout flow
+        marginBottom: 0,
+        marginTop: 10, // Added slight separation
+    },
+    audioSectionTitle: { // New title style to differentiate but keep theme
+        fontWeight: "700",
+        fontSize: 18,
+        color: "#3E2723",
+        marginBottom: 10,
+        letterSpacing: 0.4,
+    },
 
     sectionTitle: {
         fontWeight: "700",
@@ -761,7 +790,13 @@ export default function SelectedLandmarkSheet() {
         color: "#B71C1C",
         fontWeight: "500",
     },
-
+    description: {
+        fontSize: 15,
+        lineHeight: 24,
+        color: "#4E342E",
+        textAlign: "justify",
+        letterSpacing: 0.3,
+    },
 
     ratingRow: {
         flexDirection: "row",
@@ -839,41 +874,36 @@ export default function SelectedLandmarkSheet() {
         width: '100%',
         height: 300,
     },
-    description: {
-        fontSize: 15,
-        lineHeight: 24,
-        color: "#4E342E",
-        textAlign: "justify",
-        letterSpacing: 0.3,
-    },
-
-    descriptionWithAudio: {
-        marginBottom: 10,
-    },
-
-    audioControlWrapper: {
+    // Updated style for the audio player to better match the modal's internal audio player design
+    audioMinimalPlayer: {
         flexDirection: 'row',
         alignItems: 'center',
-        paddingVertical: 8,
-    },
-    audioPlayButton: {
-        width: 40,
-        height: 40,
-        borderRadius: 20,
-        backgroundColor: "#8A6F57",
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginRight: 15,
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.15,
+        backgroundColor: '#EFEBE9',
+        borderRadius: 12,
+        paddingHorizontal: 15,
+        paddingVertical: 12,
+        gap: 15,
+        borderWidth: 1,
+        borderColor: '#D7CCC8',
+        // New styles for the container to visually match the LandmarkDetailModal's audio controls
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.1,
         shadowRadius: 3,
         elevation: 3,
     },
-    audioLabel: {
-        color: "#6B5E5E",
-        fontSize: 14,
-        fontWeight: '500',
+    audioMinimalIcon: {
+        width: 40, // Increased size slightly to match LandmarkDetailModal
+        height: 40,
+        borderRadius: 20, // Half of width/height
+        backgroundColor: '#8A6F57', // Changed color to match LandmarkDetailModal's primary color
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    audioMinimalText: {
         flex: 1,
+        fontSize: 15,
+        fontWeight: '600',
+        color: '#4E342E',
     },
 });
