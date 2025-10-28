@@ -110,7 +110,7 @@ export default function LandmarkMarkers({ selectedCategory, onLoadingChange }: a
         if (name.includes("park") || category === "park") return "park";
         if (name.includes("food") || category === "food") return "food";
         if (name.includes("school") || category === "school") return "school";
-        return "pin"; 
+        return "pin"; // Default fallback icon
     };
 
     const points = filtered.map((landmark, index) =>

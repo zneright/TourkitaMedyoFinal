@@ -66,6 +66,7 @@ export default function LandmarkMarkers({ selectedCategory, onLoadingChange }: a
                     setLandmarks(fetched);
                 } else {
                     const snapshot = await getDocs(collection(db, "markers"));
+                    // ✅ FIX #1: VALIDATE MARKER COORDINATES before adding to the list.
                     const fetched = snapshot.docs.map((doc) => {
                         const data = doc.data();
                         const lat = parseFloat(data.latitude);
@@ -75,7 +76,7 @@ export default function LandmarkMarkers({ selectedCategory, onLoadingChange }: a
                         }
                         console.warn(`Skipping marker "${data.name}" due to invalid coordinates.`);
                         return null;
-                    }).filter(Boolean); 
+                    }).filter(Boolean); // This removes any null (invalid) items
 
                     setLandmarks(fetched);
                 }
@@ -110,7 +111,7 @@ export default function LandmarkMarkers({ selectedCategory, onLoadingChange }: a
         if (name.includes("park") || category === "park") return "park";
         if (name.includes("food") || category === "food") return "food";
         if (name.includes("school") || category === "school") return "school";
-        return "pin"; 
+        return "pin"; // Default fallback icon
     };
 
     const points = filtered.map((landmark, index) =>

@@ -75,7 +75,7 @@ export default function LandmarkMarkers({ selectedCategory, onLoadingChange }: a
                         }
                         console.warn(`Skipping marker "${data.name}" due to invalid coordinates.`);
                         return null;
-                    }).filter(Boolean); 
+                    }).filter(Boolean);
 
                     setLandmarks(fetched);
                 }
@@ -92,7 +92,7 @@ export default function LandmarkMarkers({ selectedCategory, onLoadingChange }: a
         if (selectedCategory === "All") return true;
         if (selectedCategory === "Restroom") return l.accessibleRestroom === true;
         if (selectedCategory === "Events") return true;
-        if (selectedCategory === "Augmented Reality") return l.arCameraSupported === true;
+        if (selectedCategory === "AR") return l.arCameraSupported === true;
         if (selectedCategory === "Relics/Artifacts") return l.categoryOption === "Relics/Artifacts";
         return l.category === selectedCategory || l.categoryOption === selectedCategory;
     });

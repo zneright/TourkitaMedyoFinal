@@ -18,7 +18,7 @@ export default function CategoryFilter({ selectedCategory, onSelectCategory }: P
     const categories = [
 
         { label: "All", uri: "https://img.icons8.com/ios-filled/100/9c8061/globe.png" },
-        { label: "AR", uri: "https://firebasestorage.googleapis.com/v0/b/admin-login-244c5.firebasestorage.app/o/models%2Fmarkers%2Ficons8-hologram-100%20(1).png?alt=media&token=aacfbd20-2ec3-4963-bb11-09c08c416069" },
+        { label: "AR Supported", uri: "https://firebasestorage.googleapis.com/v0/b/admin-login-244c5.firebasestorage.app/o/models%2Fmarkers%2Ficons8-hologram-100%20(1).png?alt=media&token=aacfbd20-2ec3-4963-bb11-09c08c416069" },
         { label: "Historical", uri: "https://img.icons8.com/ios-filled/100/9c8061/monument.png" },
 
         { label: "Food", uri: "https://img.icons8.com/ios-filled/100/9c8061/restaurant.png" },
