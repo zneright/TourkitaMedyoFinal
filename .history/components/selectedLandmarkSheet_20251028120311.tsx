@@ -848,7 +848,7 @@ export default function SelectedLandmarkSheet() {
     },
     audioPlayerText: {
         fontSize: 16,
-        fontWeight: '600',
+        fontWeight:A '600',
         color: '#4E342E',
     },
 });

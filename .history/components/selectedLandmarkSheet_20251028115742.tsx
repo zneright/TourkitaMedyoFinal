@@ -10,6 +10,7 @@ import {
     StyleSheet,
     Alert,
 } from "react-native";
+import Video from 'react-native-video';
 import { useLandmark } from "../provider/LandmarkProvider";
 import Entypo from "@expo/vector-icons/Entypo";
 import Fontisto from "@expo/vector-icons/Fontisto";
@@ -837,7 +838,7 @@ export default function SelectedLandmarkSheet() {
     video: {
         width: '100%',
         height: 300,
-    },
+    }
     audioPlayerContainer: {
         flexDirection: 'row',
         alignItems: 'center',

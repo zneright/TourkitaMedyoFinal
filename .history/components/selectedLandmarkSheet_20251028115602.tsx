@@ -10,6 +10,7 @@ import {
     StyleSheet,
     Alert,
 } from "react-native";
+import Video from 'react-native-video';
 import { useLandmark } from "../provider/LandmarkProvider";
 import Entypo from "@expo/vector-icons/Entypo";
 import Fontisto from "@expo/vector-icons/Fontisto";
@@ -354,24 +355,6 @@ export default function SelectedLandmarkSheet() {
             backgroundStyle={styles.sheetBackground}
             onClose={() => setIsPlaying(false)}
         >
-            {selectedLandmark.audio && (
-                <Video
-                    ref={videoRef}
-                    source={{ uri: selectedLandmark.audio }}
-                    paused={!isPlaying}
-                    audioOnly
-                    onLoadStart={() => setIsAudioLoading(true)}
-                    onLoad={() => setIsAudioLoading(false)}
-                    onEnd={() => setIsPlaying(false)}
-                    onError={(error) => {
-                        console.error("Audio playback error:", error);
-                        Alert.alert("Playback Error", "This audio guide could not be played.");
-                        setIsPlaying(false);
-                        setIsAudioLoading(false);
-                    }}
-                    style={{ height: 0, width: 0 }}
-                />
-            )}
             <BottomSheetScrollView contentContainerStyle={styles.scrollContainer}>
                 {loadingSheet ? (
                     <View>
@@ -837,18 +820,5 @@ export default function SelectedLandmarkSheet() {
     video: {
         width: '100%',
         height: 300,
-    },
-    audioPlayerContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: '#EFEBE9',
-        borderRadius: 12,
-        padding: 15,
-        gap: 15,
-    },
-    audioPlayerText: {
-        fontSize: 16,
-        fontWeight: '600',
-        color: '#4E342E',
-    },
+    }
 });

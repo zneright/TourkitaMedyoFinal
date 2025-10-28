@@ -10,6 +10,7 @@ import {
     StyleSheet,
     Alert,
 } from "react-native";
+import Video from 'react-native-video';
 import { useLandmark } from "../provider/LandmarkProvider";
 import Entypo from "@expo/vector-icons/Entypo";
 import Fontisto from "@expo/vector-icons/Fontisto";
@@ -354,24 +355,6 @@ export default function SelectedLandmarkSheet() {
             backgroundStyle={styles.sheetBackground}
             onClose={() => setIsPlaying(false)}
         >
-            {selectedLandmark.audio && (
-                <Video
-                    ref={videoRef}
-                    source={{ uri: selectedLandmark.audio }}
-                    paused={!isPlaying}
-                    audioOnly
-                    onLoadStart={() => setIsAudioLoading(true)}
-                    onLoad={() => setIsAudioLoading(false)}
-                    onEnd={() => setIsPlaying(false)}
-                    onError={(error) => {
-                        console.error("Audio playback error:", error);
-                        Alert.alert("Playback Error", "This audio guide could not be played.");
-                        setIsPlaying(false);
-                        setIsAudioLoading(false);
-                    }}
-                    style={{ height: 0, width: 0 }}
-                />
-            )}
             <BottomSheetScrollView contentContainerStyle={styles.scrollContainer}>
                 {loadingSheet ? (
                     <View>
@@ -570,27 +553,22 @@ export default function SelectedLandmarkSheet() {
 
                         </View>
                         {selectedLandmark.audio && (
-                            <View style={styles.section}>
-                                <Text style={styles.sectionTitle}>Audio Guide</Text>
-                                <TouchableOpacity
-                                    style={styles.audioPlayerContainer}
-                                    onPress={() => setIsPlaying(!isPlaying)}
-                                    disabled={isAudioLoading}
-                                >
-                                    {isAudioLoading ? (
-                                        <ActivityIndicator size="large" color="#6D4C41" />
-                                    ) : (
-                                        <FontAwesome
-                                            name={isPlaying ? 'pause-circle' : 'play-circle'}
-                                            size={40}
-                                            color="#6D4C41"
-                                        />
-                                    )}
-                                    <Text style={styles.audioPlayerText}>
-                                        {isPlaying ? 'Playing...' : 'Play Audio Guide'}
-                                    </Text>
-                                </TouchableOpacity>
-                            </View>
+                            <Video
+                                ref={videoRef}
+                                source={{ uri: selectedLandmark.audio }}
+                                paused={!isPlaying}
+                                audioOnly
+                                onLoadStart={() => setIsAudioLoading(true)}
+                                onLoad={() => setIsAudioLoading(false)}
+                                onEnd={() => setIsPlaying(false)}
+                                onError={(error) => {
+                                    console.error("Audio playback error:", error);
+                                    Alert.alert("Playback Error", "This audio guide could not be played.");
+                                    setIsPlaying(false);
+                                    setIsAudioLoading(false);
+                                }}
+                                style={{ height: 0, width: 0 }} // This keeps it hidden
+                            />
                         )}
                         {/* Rating */}
                         {averageRating !== null && (
@@ -837,18 +815,5 @@ export default function SelectedLandmarkSheet() {
     video: {
         width: '100%',
         height: 300,
-    },
-    audioPlayerContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: '#EFEBE9',
-        borderRadius: 12,
-        padding: 15,
-        gap: 15,
-    },
-    audioPlayerText: {
-        fontSize: 16,
-        fontWeight: '600',
-        color: '#4E342E',
-    },
+    }
 });
